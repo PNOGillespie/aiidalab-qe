@@ -208,6 +208,25 @@ class Setting(Panel):
         )
         # self.structure_type.value = input_dict.get("structure_type", "crystal")
 
+    def dummy_set_panel_value(self, input_dict):
+        """Load a dictionary with the input parameters for the plugin."""
+
+        # set selected elements and core-hole treatments
+        elements_list = input_dict.get("elements_list", [])
+        for entry in self.element_and_ch_treatment.children:
+            element = entry.children[0].description
+            if element in elements_list:
+                entry.children[0].value = True
+                entry.children[1].value = input_dict["core_hole_treatments"][element]
+            else:
+                entry.children[0].value = False
+                entry.children[1].value = "full"
+        # set supercell min parameter
+        self.supercell_min_parameter.value = input_dict.get(
+            "supercell_min_parameter", 8.0
+        )
+        # self.structure_type.value = input_dict.get("structure_type", "crystal")
+
     @tl.observe("input_structure")
     def _update_structure(self, _=None):
         self._update_element_select_panel()
